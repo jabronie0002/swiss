@@ -1,14 +1,21 @@
 from flask import Flask, request, jsonify
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 import psycopg2
 import os
 
 app = Flask(__name__)
 
-# Database connection settings (replace with your Azure PostgreSQL credentials)
-DB_HOST = os.getenv("DB_HOST", "your-db-name.postgres.database.azure.com")
-DB_NAME = os.getenv("DB_NAME", "yourdbname")
-DB_USER = os.getenv("DB_USER", "yourusername@your-db-name")
-DB_PASS = os.getenv("DB_PASS", "yourpassword")
+# Initialize Key Vault client
+key_vault_url = "https://swiss-kv-01.vault.azure.net/"
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+# Fetch secrets from Key Vault
+DB_PASS = client.get_secret("postgres-password").value
+DB_USER = client.get_secret("postgres-username").value
+DB_NAME = client.get_secret("postgres-dbname").value
+DB_HOST = "swiss-postgres-01.postgres.database.azure.com"
 
 # Connect to PostgreSQL
 conn = psycopg2.connect(

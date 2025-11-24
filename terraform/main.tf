@@ -2,6 +2,7 @@ provider "azurerm" {
   features {}
 }
 
+
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_resource_group" "rg" {
@@ -50,8 +51,6 @@ resource "azurerm_postgresql_flexible_server" "pg" {
   authentication {
     password_auth_enabled = true
   }
-
-  zone = "1"
 
   backup_retention_days        = 7
   geo_redundant_backup_enabled = false

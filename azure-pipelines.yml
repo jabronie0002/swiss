@@ -16,9 +16,11 @@ variables:
   IMAGE_NAME: ghcr.io/$(Build.Repository.Name):latest
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.13'
+
+- script: |
+    where python
+    python --version
+  displayName: 'Check Python path'
 
 - script: |
     python -m pip install --upgrade pip
@@ -26,6 +28,7 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
+    python --version
     python test_app.py
   displayName: 'Run tests'
 

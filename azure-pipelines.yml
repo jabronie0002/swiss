@@ -18,19 +18,19 @@ variables:
 steps:
 
 - script: |
-    where python
     python --version
-  displayName: 'Check Python path'
+  displayName: 'Check Python version'
+  workingDirectory: src
 
 - script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    pip install --user -r requirements.txt
   displayName: 'Install dependencies'
+  workingDirectory: src
 
 - script: |
-    python --version
     python test_app.py
   displayName: 'Run tests'
+  workingDirectory: src
 
 - task: DockerInstaller@0
   displayName: 'Install Docker'
@@ -44,3 +44,4 @@ steps:
     docker push $(IMAGE_NAME)
   condition: succeeded()
   displayName: 'Build and push Docker image'
+  workingDirectory: src

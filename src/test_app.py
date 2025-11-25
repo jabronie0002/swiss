@@ -1,5 +1,5 @@
 import unittest
-from web import mirror_word
+from utils import mirror_word
 
 class TestMirrorFunction(unittest.TestCase):
     def test_mirror_word(self):

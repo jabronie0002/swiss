@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+from utils import mirror_word
 import psycopg2
 import os
 
@@ -39,12 +40,12 @@ conn.commit()
 def health():
     return jsonify(status="ok")
 
-def mirror_word(word):
-    flipped = ''.join(
-        c.lower() if c.isupper() else c.upper() if c.islower() else c
-        for c in word
-    )[::-1]
-    return flipped
+#def mirror_word(word):
+#    flipped = ''.join(
+#        c.lower() if c.isupper() else c.upper() if c.islower() else c
+#        for c in word
+#    )[::-1]
+#    return flipped
 
 @app.route('/api/mirror')
 def mirror():

@@ -1,0 +1,41 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  IMAGE_NAME: ghcr.io/$(Build.Repository.Name):latest
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    python test_app.py
+  displayName: 'Run tests'
+
+- task: DockerInstaller@0
+  displayName: 'Install Docker'
+
+- script: |
+    echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $(Build.Repository.Name) --password-stdin
+  displayName: 'Login to GHCR'
+
+- script: |
+    docker build -t $(IMAGE_NAME) .
+    docker push $(IMAGE_NAME)
+  condition: succeeded()
+  displayName: 'Build and push Docker image'

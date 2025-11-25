@@ -36,8 +36,12 @@ steps:
   displayName: 'Install Docker'
 
 - powershell: |
-    echo $env:GHCR_TOKEN | docker login ghcr.io -u jabronie0002 --password-stdin
-  displayName: 'Login to GitHub Container Registry'
+    if ($env:GHCR_TOKEN) {
+      Write-Host "GHCR_TOKEN is set. Length: $($env:GHCR_TOKEN.Length)"
+    } else {
+      Write-Host "GHCR_TOKEN is NOT set!"
+    }
+  displayName: 'Debug: Check GHCR_TOKEN presence'
   env:
     GHCR_TOKEN: $(GHCR_TOKEN)
 

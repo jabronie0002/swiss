@@ -8,7 +8,9 @@ trigger:
       - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default
+  demands:
+    - agent.name -equals my-desktop
 
 variables:
   IMAGE_NAME: ghcr.io/$(Build.Repository.Name):latest

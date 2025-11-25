@@ -51,4 +51,3 @@ steps:
     docker push $(IMAGE_NAME)
   condition: succeeded()
   displayName: 'Build and push Docker image'
-  workingDirectory: src

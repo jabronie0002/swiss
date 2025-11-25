@@ -35,8 +35,8 @@ steps:
 - task: DockerInstaller@0
   displayName: 'Install Docker'
 
-- script: |
-    echo "$GHCR_TOKEN" | docker login ghcr.io -u jabronie0002 --password-stdin
+- powershell: |
+    echo $env:GHCR_TOKEN | docker login ghcr.io -u jabronie0002 --password-stdin
   displayName: 'Login to GitHub Container Registry'
   env:
     GHCR_TOKEN: $(GHCR_TOKEN)

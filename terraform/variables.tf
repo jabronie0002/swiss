@@ -30,3 +30,14 @@ variable "postgres_db_name" {
   default     = "swissdb"
   description = "Name of the PostgreSQL database"
 }
+
+variable "aks_cluster_name" {
+  description = "Name of the AKS cluster"
+  type        = string
+}
+
+variable "kubernetes_version" {
+  description = "Kubernetes version to use"
+  type        = string
+  default     = "1.34.0" # Adjust to latest supported version
+}

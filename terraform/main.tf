@@ -78,3 +78,37 @@ resource "azurerm_postgresql_flexible_server_database" "pgdb" {
   collation = "en_US.utf8"
   charset   = "UTF8"
 }
+
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = var.aks_cluster_name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "${var.aks_cluster_name}-dns"
+
+  default_node_pool {
+    name                = "system"
+    node_count          = 1
+    vm_size             = "Standard_B2ps_v2"
+    os_disk_size_gb     = 30
+    type                = "VirtualMachineScaleSets"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  kubernetes_version = var.kubernetes_version
+}
+
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate)
+}
+
+resource "kubernetes_namespace" "swiss_dev" {
+  metadata {
+    name = "swiss-dev"
+  }
+}

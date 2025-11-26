@@ -1,0 +1,26 @@
+{{- if .Values.secretProviderClass.enabled }}
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: {{ .Values.secretProviderClass.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "{{ .Values.secretProviderClass.usePodIdentity }}"
+    keyvaultName: "{{ .Values.secretProviderClass.keyvaultName }}"
+    objects: |
+      array:
+{{- range .Values.secretProviderClass.secrets }}
+        - objectName: {{ .objectName }}
+          objectType: {{ .objectType }}
+{{- end }}
+  secretObjects:
+    - secretName: {{ .Values.secretProviderClass.k8sSecretName }}
+      type: Opaque
+      data:
+{{- range .Values.secretProviderClass.secrets }}
+        - objectName: {{ .objectName }}
+          key: {{ .key }}
+{{- end }}
+{{- end }}

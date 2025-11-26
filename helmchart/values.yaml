@@ -4,6 +4,7 @@ image:
   repository: ghcr.io/jabronie0002/swiss
   tag: latest
   pullPolicy: IfNotPresent
+  pullSecret: ghcr-secret
 
 service:
   type: ClusterIP

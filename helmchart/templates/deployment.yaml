@@ -13,9 +13,12 @@ spec:
       labels:
         app: swiss
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
       containers:
         - name: swiss
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+      
           ports:
             - containerPort: {{ .Values.service.targetPort }}

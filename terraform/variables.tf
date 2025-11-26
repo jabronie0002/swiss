@@ -27,6 +27,6 @@ variable "postgres_admin" {
 
 variable "postgres_db_name" {
   type        = string
-  default     = "mirrorapp"
+  default     = "swissdb"
   description = "Name of the PostgreSQL database"
 }

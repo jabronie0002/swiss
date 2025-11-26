@@ -23,7 +23,7 @@ resource "azurerm_key_vault" "kv" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
 
-    secret_permissions = ["Get", "Set", "List"]
+    secret_permissions = ["Get", "Set", "List", "Delete"]
   }
 }
 
@@ -35,6 +35,18 @@ resource "random_password" "postgres_password" {
 resource "azurerm_key_vault_secret" "pg_password" {
   name         = "postgres-password"
   value        = random_password.postgres_password.result
+  key_vault_id = azurerm_key_vault.kv.id
+}
+
+resource "azurerm_key_vault_secret" "pg_username" {
+  name         = "postgres-username"
+  value        = var.postgres_admin
+  key_vault_id = azurerm_key_vault.kv.id
+}
+
+resource "azurerm_key_vault_secret" "pg_dbname" {
+  name         = "postgres-dbname"
+  value        = var.postgres_db_name
   key_vault_id = azurerm_key_vault.kv.id
 }
 
